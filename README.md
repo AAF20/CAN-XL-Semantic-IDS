@@ -1,8 +1,6 @@
 # A Formally Verified Semantic Intrusion Detection System for Automotive CAN XL Networks
 
-This repository accompanies the IEEE-accepted research paper *A Formally Verified Semantic Intrusion Detection System for Automotive CAN XL Networks*. It provides the synthesizable SystemVerilog RTL implementation of the proposed semantic intrusion detection system (IDS), its white-box SystemVerilog Assertion (SVA) checkers, and the Synopsys VC Formal Tcl script used for formal property verification.
-
-The proposed design addresses semantic security in CAN XL networks through three hierarchical security levels: Service Data Unit Type (SDT)-based semantic interpretation, Virtual CAN Network Identifier (VCID)-based domain binding, and domain-specific authorization of outer services and individual inner PDUs. The IDS further enforces configuration consistency, payload-stream validity, stateful domain ownership, and timing requirements. Detected violations are accumulated as security evidence and reported through a contextual incident interface. Persistent state updates are permitted only after violation-free frame completion.
+This repository accompanies the research paper A Formally Verified Semantic Intrusion Detection System for Automotive CAN XL Networks, accepted for publication at the IEEE Computing and Communication Workshop and Conference (IEEE CCWC 2027). It provides the synthesizable SystemVerilog RTL implementation of the proposed semantic intrusion detection system (IDS), its white-box SystemVerilog Assertion (SVA) checkers, and the Synopsys VC Formal Tcl script used for formal property verification.
 
 ## 1. Architecture
 
