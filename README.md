@@ -13,16 +13,7 @@ This repository accompanies the research paper A Formally Verified Semantic Intr
 *Internal architecture of the proposed CAN XL semantic IDS.*
 -->
 
-The IDS processes one frame at a time, accepting receiver-provided metadata before the corresponding payload stream. Its architecture combines:
-
-- **Level 1 — SDT-based semantic interpretation:** selects the native or multi-PDU semantic class and the method for extracting the outer service identifier from the Acceptance Field (AF).
-- **Level 2 — VCID-based domain binding:** requires exactly one matching domain binding with a consistent configuration generation and establishes the applicable service-rule and state-storage ranges.
-- **Level 3 — Domain-specific authorization:** evaluates the outer service against the selected domain's rules, including Priority ID (PID), declared payload length, SEC indication, and receiver-provided CANsec status. Each inner PDU in a multi-PDU frame is independently authorized within the outer-frame context.
-- **Stateful ownership and timing protection:** validates state addresses, domain ownership, and minimum transmission intervals before preparing a pending state update.
-- **Payload-stream validation and multi-PDU parsing:** checks accepted byte counts, byte-enable masks, abort conditions, and inner-PDU structure using a research-defined 8-byte header.
-- **Frame finalization and incident reporting:** combines accumulated frame and parser evidence, commits pending state only for clean authorized frames, and reports detected violations with their associated frame context.
-
-The IDS consumes receiver-provided metadata and CANsec status; it does not implement the CAN XL physical layer or independently perform cryptographic verification. Native payload bodies are treated as opaque. The inner-PDU header format is defined for this research implementation.
+The IDS processes one frame at a time, accepting receiver-provided metadata before the corresponding payload stream. Its architecture is as follows:
 
 <img width="634" height="433" alt="CAN-XL_IDS" src="https://github.com/user-attachments/assets/13a0404a-87cc-4310-bdf4-832210b8b5e8" />
 
@@ -45,8 +36,6 @@ The RTL contains the following package and modules:
 | `can_xl_state_store` | Stateful domain ownership, timing validation, and persistent state updates. |
 | `can_xl_multi_pdu_parser` | Streaming inner-PDU header parsing, authorization, boundary tracking, and evidence accumulation. |
 | `can_xl_semantic_ids` | Top-level semantic interpretation, domain binding, authorization, payload processing, finalization, and incident reporting. |
-
-The formal checker comments correspond to the paper's Formal Assertion Catalog, Formal Assumption Catalog, and Formal Cover Property Catalog.
 
 ## 3. Reproducing the formal verification setup
 
@@ -71,16 +60,7 @@ vcf -f canxl-IDS.tcl
 
 The script elaborates `can_xl_semantic_ids` with its bound SVA checkers, enables vacuity and witness analysis, defines the formal clock, initializes the design through active-low reset, saves the initialized state, and executes `check_fv`.
 
-The script retains the original proof-resource settings:
-
-```tcl
-set_fml_var fml_max_time 200H
-set_fml_var fml_max_mem 24GB
-set_fml_var fml_auto_scale_task_count 16
-set_grid_usage -type rsh=16
-```
-
-The evaluated configuration uses eight domain bindings, 16 outer-service rules, 16 inner-PDU rules, and 256 state entries. Four active SVA assumptions constrain stalled metadata and payload transfers and a checker-only symbolic state-store index. Initial reset is established separately through Tcl. The verification environment does not assume authorized traffic, unique policy matches, successful CANsec checks, or eventual payload completion.
+The evaluated configuration uses eight domain bindings, 16 outer-service rules, 16 inner-PDU rules, and 256 state entries. Initial reset is established separately through Tcl. The verification environment does not assume authorized traffic, unique policy matches, successful CANsec checks, or eventual payload completion.
 
 Changing the tool version, grid configuration, resource limits, design parameters, assumptions, or executable source may affect proof effort or results.
 
@@ -118,13 +98,16 @@ The proposed semantic IDS was implemented on the AMD Kria KV260 FPGA platform us
 
 On-chip functional validation used Virtual Input/Output (VIO) and an Integrated Logic Analyzer (ILA) to evaluate legitimate native and multi-PDU frames and four security violation scenarios. The FPGA evaluation is described in the paper; the FPGA test infrastructure and experimental waveform figures are not included in this repository.
 
+<img width="601" height="792" alt="image" src="https://github.com/user-attachments/assets/b2096092-4877-4e68-bae0-b8239803a31f" />
+
+
 ## 6. Manuscript and citation
 
 **Associated paper:**
 
 Amir Alipour-Fanid, Monireh Dabaghchian, and Mandar Munishwar, “A Formally Verified Semantic Intrusion Detection System for Automotive CAN XL Networks.”
 
-**Publication status:** Accepted for publication by IEEE. Final bibliographic details, including the publication venue and DOI, will be added when available.
+**Publication status:** Accepted for publication by IEEE CCWC 2027. Final bibliographic details, including the publication venue and DOI, will be added when available.
 
 The paper presents the system model, threat model, proposed semantic IDS architecture, formal verification methodology and results, FPGA implementation, and experimental validation.
 
