@@ -26,6 +26,9 @@ The IDS processes one frame at a time, accepting receiver-provided metadata befo
 
 The IDS consumes receiver-provided metadata and CANsec status; it does not implement the CAN XL physical layer or independently perform cryptographic verification. Native payload bodies are treated as opaque. The inner-PDU header format is defined for this research implementation.
 
+<img width="634" height="433" alt="CAN-XL_IDS" src="https://github.com/user-attachments/assets/13a0404a-87cc-4310-bdf4-832210b8b5e8" />
+
+
 ## 2. Repository contents
 
 The three source files are kept in the repository root because the Tcl script analyzes both SystemVerilog files by relative filename.
